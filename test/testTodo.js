@@ -89,3 +89,39 @@ test('Changes done state on input click', function () {
 	this.itemView.$checkbox.trigger('click');
 	ok(this.item.get('done'));
 });
+
+module('ItemsView test case', {
+	setup: function () {
+		this.items = new TODO.Items([{
+			name: 'foo'
+		}, {
+			name: 'bar'
+		}]);
+
+		this.itemsView = new TODO.ItemsView({
+			collection: this.items
+		});
+
+		this.itemsView.render();
+	}
+});
+
+test('It creates views', function () {
+	equal(this.itemsView.views.length, 2);
+});
+
+test('It renders views in $itemContainer as li', function () {
+	equal(this.itemsView.$itemContainer.find('li').length, 2);
+});
+
+test('It renders view on collection add event', function () {
+	this.items.add({
+		name: 'baz'
+	});
+	equal(this.itemsView.$itemContainer.find('li').length, 3);
+});
+
+test('It renders $newItemForm with input and aubmit button', function () {
+	equal(this.itemsView.$newItemForm.find('input[type=text]').length, 1);
+	equal(this.itemsView.$newItemForm.find('button[type=submit]').length, 1);
+});

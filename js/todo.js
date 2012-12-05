@@ -57,3 +57,42 @@ TODO.ItemView = Backbone.View.extend({
 		this.renderState();
 	}
 });
+
+TODO.Items = Backbone.Collection.extend({
+	model: TODO.Item
+});
+
+TODO.ItemsView = Backbone.View.extend({
+	initialize: function () {
+		this.views = [];
+		this.collection.each(this.addView, this);
+		this.collection.on('add', function (model) {
+			this.addView(model);
+			this.render();
+		}, this);
+	},
+
+	addView: function (model) {
+		this.views.push(new TODO.ItemView({
+			tagName: 'li',
+			model: model
+		}));
+	},
+
+	renderViews: function () {
+		this.$itemContainer.empty();
+		_(this.views).each(function (view) {
+			this.$itemContainer.append(view.$el);
+			view.render();
+		}, this);
+	},
+
+	render: function () {
+		this.$el.empty();
+		this.$itemContainer = $('<ul></ul>');
+		this.$newItemForm = $('<form></form>');
+		this.$newItemForm.append('<input type="text" />');
+		this.$newItemForm.append('<button type="submit" />');
+		this.renderViews();
+	}
+});
