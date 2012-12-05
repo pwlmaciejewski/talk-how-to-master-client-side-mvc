@@ -4,6 +4,16 @@ TODO.Item = Backbone.Model.extend({
 	defaults: {
 		name: '',
 		done: false
+	},
+
+	validate: function (attributes) {
+		if (attributes.name.length < 3) {
+			return new Error('Name must consist of three or more characters');			
+		}
+
+		if (attributes.name.length > 20) {
+			return new Error('Name can consist of twenty characters at most');
+		}
 	}
 });
 

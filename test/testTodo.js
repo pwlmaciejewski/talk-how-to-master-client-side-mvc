@@ -22,6 +22,22 @@ test('Test initialization (we propably shouldnt do that)', function () {
 	equal(this.item.get('name'), 'foo');
 });
 
+test('Validation name minimum length', function () {
+	var spy = sinon.spy();
+	this.item.on('error', spy);
+	this.item.set('name', 'x');
+	ok(spy.called);
+	equal(spy.firstCall.args[1].message, 'Name must consist of three or more characters');
+});
+
+test('Validation name maximum length', function () {
+	var spy = sinon.spy();
+	this.item.on('error', spy);
+	this.item.set('name', '123456789012345678901');
+	ok(spy.called);
+	equal(spy.firstCall.args[1].message, 'Name can consist of twenty characters at most');
+});
+
 module('ItemView test case', {
 	setup: function () {
 		this.item = new TODO.Item({
