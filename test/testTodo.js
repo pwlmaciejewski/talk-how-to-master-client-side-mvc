@@ -33,9 +33,9 @@ test('Validation name minimum length', function () {
 test('Validation name maximum length', function () {
 	var spy = sinon.spy();
 	this.item.on('error', spy);
-	this.item.set('name', '123456789012345678901234567890123456789012345678901');
+	this.item.set('name', '12345678901234567890123456789012345678901');
 	ok(spy.called);
-	equal(spy.firstCall.args[1].message, 'Name can consist of twenty characters at most');
+	equal(spy.firstCall.args[1].message, 'Name can consist of fourty characters at most');
 });
 
 module('ItemView test case', {

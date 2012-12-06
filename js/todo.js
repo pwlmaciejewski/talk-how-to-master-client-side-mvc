@@ -11,8 +11,8 @@ TODO.Item = Backbone.Model.extend({
 			return new Error('Name must consist of three or more characters');			
 		}
 
-		if (attributes.name.length > 50) {
-			return new Error('Name can consist of twenty characters at most');
+		if (attributes.name.length > 40) {
+			return new Error('Name can consist of fourty characters at most');
 		}
 	}
 });
