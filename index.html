@@ -2,16 +2,33 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
-		<title>Backbone TGD</title>
+		<title>Backbone TODO</title>
+		<link href='http://fonts.googleapis.com/css?family=Lobster|The+Girl+Next+Door' rel='stylesheet' type='text/css'>
 		<link href="./css/reset.css" type="text/css" rel="stylesheet" />
 		<link href="./css/base.css" type="text/css" rel="stylesheet" />
 		<link href="./css/todo.css" type="text/css" rel="stylesheet" />
 	</head>
 	<body>
-		<div id="todo"></div>
+		<div class="todoContainer">
+			<h1>Backbone.js TODO</h1>
+			<div id="todo"></div>
+		</div>
+
 		<script src="./js/jquery-1.8.3.js"></script>
 		<script src='./js/underscore.js'></script>
 		<script src="./js/backbone.js"></script>
 		<script src="./js/todo.js"></script>
+		<script>
+			(function () {
+				var items = new TODO.Items();
+
+				var itemsView = new TODO.ItemsView({
+					collection: items,
+					el: $('#todo')
+				});
+
+				itemsView.render();
+			})();
+		</script>
 	</body>
 </html>

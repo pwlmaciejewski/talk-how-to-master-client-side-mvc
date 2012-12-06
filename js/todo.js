@@ -11,7 +11,7 @@ TODO.Item = Backbone.Model.extend({
 			return new Error('Name must consist of three or more characters');			
 		}
 
-		if (attributes.name.length > 20) {
+		if (attributes.name.length > 50) {
 			return new Error('Name can consist of twenty characters at most');
 		}
 	}
@@ -55,6 +55,7 @@ TODO.ItemView = Backbone.View.extend({
 		this.renderCheckbox();
 		this.renderName();
 		this.renderState();
+		this.delegateEvents();
 	}
 });
 
@@ -72,6 +73,20 @@ TODO.ItemsView = Backbone.View.extend({
 		}, this);
 	},
 
+	onSubmit: function (event) {
+		event.preventDefault();
+		var model = new TODO.Item({
+			name: this.$input.val()
+		});
+
+		if (model.isValid()) {
+			this.collection.add({ 
+				name: this.$input.val() 
+			});
+			this.$input.val('');			
+		}
+	},
+
 	addView: function (model) {
 		this.views.push(new TODO.ItemView({
 			tagName: 'li',
@@ -80,19 +95,32 @@ TODO.ItemsView = Backbone.View.extend({
 	},
 
 	renderViews: function () {
-		this.$itemContainer.empty();
 		_(this.views).each(function (view) {
-			this.$itemContainer.append(view.$el);
+			this.$container.append(view.$el);
 			view.render();
 		}, this);
 	},
 
+	renderContainer: function () {
+		this.$container = $('<ul></ul>');
+		this.$el.append(this.$container);
+	},
+
+	renderInputForm: function () {
+		this.$newItemForm = $('<form></form>');
+		this.$input = $('<input type="text" />');
+		this.$newItemForm.append(this.$input);
+		this.$submitButton = $('<button type="submit" />');
+		this.$submitButton.html('Add');
+		this.$newItemForm.append(this.$submitButton);
+		this.$el.append(this.$newItemForm);
+	},
+
 	render: function () {
 		this.$el.empty();
-		this.$itemContainer = $('<ul></ul>');
-		this.$newItemForm = $('<form></form>');
-		this.$newItemForm.append('<input type="text" />');
-		this.$newItemForm.append('<button type="submit" />');
+		this.renderInputForm();
+		this.renderContainer();
 		this.renderViews();
+		this.$newItemForm.bind('submit', _.bind(this.onSubmit, this));
 	}
 });
