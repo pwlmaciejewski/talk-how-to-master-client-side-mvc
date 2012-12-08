@@ -7,19 +7,11 @@ module('Item test case', {
 	}
 });
 
-test('Item instance', function () {
-	equal(typeof this.item, 'object');
-});
-
 test('Item default attributes', function () {
 	deepEqual((new TODO.Item()).toJSON(), {
 		name: '',
 		done: false	
 	});
-});
-
-test('Test initialization (we propably shouldnt do that)', function () {
-	equal(this.item.get('name'), 'foo');
 });
 
 test('Validation name minimum length', function () {
@@ -64,7 +56,7 @@ test('It has $checkbox property', function () {
 test('It renders name in p.name', function () {
 	var name = this.itemView.$el.find('p.name');
 	equal(name.length, 1);
-	equal(this.itemView.$name[0], name[0]);
+	equal(this.itemView.$name.html(), this.item.get('name'));
 });
 
 test('Render reflects the model state', function () {
@@ -90,6 +82,12 @@ test('Changes done state on input click', function () {
 	ok(this.item.get('done'));
 });
 
+test('Clears $el during render', function () {
+	this.itemView.$el.append('<p class="xxx"></p>');
+	this.itemView.render();
+	equal(this.itemView.$el.find('p.xxx').length, 0);
+});
+
 module('ItemsView test case', {
 	setup: function () {
 		this.items = new TODO.Items([{
@@ -108,9 +106,15 @@ module('ItemsView test case', {
 
 test('It creates views', function () {
 	equal(this.itemsView.views.length, 2);
+	ok(this.itemsView.views[0] instanceof TODO.ItemView);
 });
 
-test('It renders views in $itemContainer as li', function () {
+test('It has $container', function () {
+	ok('$container' in this.itemsView);
+	equal(this.itemsView.$el.find('ul')[0], this.itemsView.$container[0]);
+});
+
+test('It renders views in $container as li', function () {
 	equal(this.itemsView.$container.find('li').length, 2);
 });
 
@@ -121,9 +125,16 @@ test('It renders view on collection add event', function () {
 	equal(this.itemsView.$container.find('li').length, 3);
 });
 
-test('It renders $newItemForm with input and submit button', function () {
-	equal(this.itemsView.$el.find('input[type=text]').length, 1);
-	equal(this.itemsView.$el.find('button[type=submit]').length, 1);
+test('It has $newItemForm', function () {
+	ok('$newItemForm' in this.itemsView);
+	equal(this.itemsView.$el.find('form')[0], this.itemsView.$newItemForm[0]);
+});
+
+test('$newItemForm with input and submit button', function () {
+	equal(this.itemsView.$newItemForm.find('input[type=text]').length, 1);
+	var button = this.itemsView.$newItemForm.find('button[type=submit]');
+	equal(button.length, 1);
+	equal(button.html(), 'Add');
 });
 
 test('On submit it takes user input and creates a new model', function () {

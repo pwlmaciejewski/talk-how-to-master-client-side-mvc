@@ -8,7 +8,7 @@ TODO.Item = Backbone.Model.extend({
 
 	validate: function (attributes) {
 		if (attributes.name.length < 3) {
-			return new Error('Name must consist of three or more characters');			
+			return new Error('Name must consist of three or more characters');
 		}
 
 		if (attributes.name.length > 40) {
@@ -19,42 +19,43 @@ TODO.Item = Backbone.Model.extend({
 
 TODO.ItemView = Backbone.View.extend({
 	initialize: function () {
-		this.model.on('change:done', this.renderState, this);
+		this.model.on('change', this.update, this);
 	},
 
 	events: {
 		'click input[type=checkbox]': 'onCheckboxClick'
 	},
 
-	onCheckboxClick: function (event) {
-		this.model.set('done', this.$checkbox.is(':checked'));
+	onCheckboxClick: function () {
+		this.model.set('done', this.$checkbox.is(':checked'));		
 	},
 
 	renderCheckbox: function () {
-		this.$checkbox = $('<input type="checkbox" />'); 
+		this.$checkbox = $('<input type="checkbox" />');
 		this.$el.append(this.$checkbox);
 	},
 
 	renderName: function () {
-		this.$name = $('<p class="name">' + this.model.get('name') + '</p>');
+		this.$name = $('<p class="name"></p>');
 		this.$el.append(this.$name);
 	},
 
-	renderState: function () {
+	update: function () {
+		this.$name.html(this.model.get('name'));
 		if (this.model.get('done')) {
 			this.$checkbox[0].checked = true;
-			this.$el.addClass('done');			
+			this.$el.addClass('done');
 		} else {
 			this.$checkbox[0].checked = false;
 			this.$el.removeClass('done');
-		}
+		}		
 	},
 
 	render: function () {
 		this.$el.empty();
 		this.renderCheckbox();
 		this.renderName();
-		this.renderState();
+		this.update();
 		this.delegateEvents();
 	}
 });
@@ -66,39 +67,43 @@ TODO.Items = Backbone.Collection.extend({
 TODO.ItemsView = Backbone.View.extend({
 	initialize: function () {
 		this.views = [];
-		this.collection.each(this.addView, this);
+		
+		_(this.collection.models).each(this.addView, this);
+
 		this.collection.on('add', function (model) {
 			this.addView(model);
-			this.render();
+			this.renderViews();
 		}, this);
+	},
+
+	addView: function (model) {
+		this.views.push(new TODO.ItemView({
+			model: model,
+			tagName: 'li'
+		}));
 	},
 
 	onSubmit: function (event) {
 		event.preventDefault();
+
 		var model = new TODO.Item({
 			name: this.$input.val()
 		});
 
 		if (model.isValid()) {
-			this.collection.add({ 
-				name: this.$input.val() 
-			});
-			this.$input.val('');			
+			this.collection.add(model);
+			this.$input.val('');
 		}
 	},
 
-	addView: function (model) {
-		this.views.push(new TODO.ItemView({
-			tagName: 'li',
-			model: model
-		}));
+	renderViews: function () {
+		this.$container.empty();
+		_(this.views).each(this.renderView, this);
 	},
 
-	renderViews: function () {
-		_(this.views).each(function (view) {
-			this.$container.append(view.$el);
-			view.render();
-		}, this);
+	renderView: function (view) {
+		this.$container.append(view.$el);
+		view.render();
 	},
 
 	renderContainer: function () {
@@ -106,21 +111,18 @@ TODO.ItemsView = Backbone.View.extend({
 		this.$el.append(this.$container);
 	},
 
-	renderInputForm: function () {
-		this.$newItemForm = $('<form></form>');
+	renderNewItemForm: function () {
+		this.$newItemForm = $('<form />');
 		this.$input = $('<input type="text" />');
 		this.$newItemForm.append(this.$input);
-		this.$submitButton = $('<button type="submit" />');
-		this.$submitButton.html('Add');
-		this.$newItemForm.append(this.$submitButton);
+		this.$newItemForm.append('<button type="submit">Add</button>');
 		this.$el.append(this.$newItemForm);
+		this.$newItemForm.bind('submit', _.bind(this.onSubmit, this));
 	},
 
 	render: function () {
-		this.$el.empty();
-		this.renderInputForm();
+		this.renderNewItemForm();
 		this.renderContainer();
 		this.renderViews();
-		this.$newItemForm.bind('submit', _.bind(this.onSubmit, this));
 	}
 });

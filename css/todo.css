@@ -11,7 +11,7 @@ body {
 }
 .todoContainer h1 {
 	border-bottom: 2px solid #ddd;
-	font: 72px/100px Lobster;
+	font: 72px/100px Lobster, sans-serif;
 	height: 100px;
 	margin-bottom: 50px;
 	padding-bottom: 40px;
@@ -80,7 +80,7 @@ body {
 }
 #todo ul > li .name {
 	font-size: 24px;
-	font-family: 'The Girl Next Door';
+	font-family: 'The Girl Next Door', sans-serif;
 	line-height: 32px;
 	margin-left: 40px;
 }
