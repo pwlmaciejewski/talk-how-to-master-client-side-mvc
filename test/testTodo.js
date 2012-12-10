@@ -149,6 +149,16 @@ test('Clears input after submit', function () {
 	equal(this.itemsView.$input.val(), '');
 });
 
+test('onSubmit prevents default', function () {
+	var event = {
+		preventDefault: function () {}
+	};
+	var mock = sinon.mock(event);
+	mock.expects('preventDefault').once();
+	this.itemsView.onSubmit(event);
+	ok(mock.verify());
+});
+
 test('Dont add invalid models', function () {
 	this.itemsView.$input.val('f');
 	this.itemsView.$newItemForm.submit();
