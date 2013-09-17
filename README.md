@@ -1,6 +1,10 @@
 "How to master client-side MVC"
 ====================
 
-[Slides](http://fragphace.github.io/talk-how-to-master-client-side-mvc/)
+TGD.NET (Torun .NET Developers Group) talk and live coding demo.
 
-Backbone live coding example app for TGD meeting
+## [Slides](http://fragphace.github.io/talk-how-to-master-client-side-mvc/)
+
+## Demo
+
+Clone and make tests passing!
