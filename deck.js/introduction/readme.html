@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js ie6" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js ie7" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js ie8" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!-->  <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	
+	<title>Readme</title>
+	
+	<meta name="description" content="A jQuery library for modern HTML presentations">
+	<meta name="viewport" content="width=1024, user-scalable=no">
+	
+	<!-- Core and extension CSS files -->
+	<link rel="stylesheet" href="../core/deck.core.css">
+	<link rel="stylesheet" href="../extensions/goto/deck.goto.css">
+	<link rel="stylesheet" href="../extensions/menu/deck.menu.css">
+	<link rel="stylesheet" href="../extensions/navigation/deck.navigation.css">
+	<link rel="stylesheet" href="../extensions/status/deck.status.css">
+	<link rel="stylesheet" href="../extensions/hash/deck.hash.css">
+	
+	<!-- Theme CSS files (menu swaps these out) -->
+	<link rel="stylesheet" id="style-theme-link" href="../themes/style/web-2.0.css">
+	<link rel="stylesheet" id="transition-theme-link" href="../themes/transition/horizontal-slide.css">
+	
+	<!-- Custom CSS just for this page -->
+	<link rel="stylesheet" href="introduction.css">
+	
+	<script src="../modernizr.custom.js"></script>
+</head>
+
+<body class="deck-container">
+
+<div class="slide" id="1"><h1>markdown2deckjs</h1>
+<p>Author: Ulf Bögeholz</p>
+<p>Version: 0.1 | 2011/09/21</p>
+</div><div class="slide" id="2"><h2>What is this?</h2>
+<p>After I saw deck.js recently, I immediatelly liked the look and feel of it. What I did not like was to generate HTML slides by hand. I surfed around a bit and quickly found out that there was a nice markdown library for python. Playing around (and not sleeping instead) quickly showed results. Voila.</p>
+</div><div class="slide" id="3"><h2>Dependencies</h2>
+<ul>
+<li>markdown</li>
+<li>jinja2</li>
+<li>elementtree</li>
+</ul>
+<p>Install by using Pip: <code>pip install markdown jinja2 elementtree</code></p>
+</div><div class="slide" id="4"><h2>How to use</h2>
+<ul>
+<li>Get a local copy of deck.js</li>
+<li>Write a markdown file with your presentation in it</li>
+<li>Compile the markdown file to a deck.js HTML file</li>
+<li>Enjoy the slides</li>
+</ul>
+<h3>Play-by-play</h3>
+<pre><code>$ mkdir m2d
+$ cd m2d
+$ git clone https://github.com/imakewebthings/deck.js.git
+# Now setup your local webserver to serve the deck.js/introduction directory
+$ git clone https://github.com/ulf/markdown2deckjs.git
+$ cd markdown2deckjs
+$ ./m2d README.md templates/plain.html "Readme" &gt; ../deck.js/introduction/readme.html
+# Look at the readme.html file in your browser. Done
+</code></pre>
+</div><div class="slide" id="5"><h2>How do I create my slides?</h2>
+<p>Every time the markdown contains a H1 or H2 (#, ##), a new slide will be created in your presentation. Basically just write your text and mix in a heading if you need a new slide.</p>
+<pre><code># Title Slide
+
+## First Content Slide
+This is nice
+
+## Second Content Slide
+This too
+</code></pre>
+<p>will result in a three-slide presentation. Try it:</p>
+<pre><code>$ m2d example1.md templates/plain.html "My Test" &gt; ../deck.js/example1.html
+</code></pre>
+</div><div class="slide" id="6"><h2>Downloadable files</h2>
+<p>One problem with deck.js is that it is not easily sharable offline. So I added an option to the program which allows for creation of simple HTML files for easy distribution. No slide effects will be applied in the HTML code, as well other control elements (like tilde, see below) will be stripped.</p>
+<pre><code>$ m2d example.md templates/download.html "My Test" -p &gt; downloadable.html
+</code></pre>
+</div><div class="slide" id="7"><h2>Seems like magic. How does it work?</h2>
+<p>The python markdown module offers a broad scope for writing extensions. I found a possibility to hook in an extension after the HTML element tree has already been generated from the markdown file. All I do is traverse the tree and make some minor adjustments in the element configuration. The altered HTML is then pasted into a plain deck.js template to generate the presentation.</p>
+</div><div class="slide" id="8"><h2>Differences to markdown</h2>
+<p>I added a little feature to make slides more interactive. If your text elements end with a tilde, the char is stripped and the element is instead given the <code>slide</code> class, which has the effect that the element will not be shown initially. Instead, you need to advance the slide to show the element. This seemed to be te easiest way to construct incremental slides.</p>
+</div><div class="slide" id="9"><h2>I want to extend this</h2>
+<p>Feel free! Just fork or get in touch if you like, there might be a lot of ways to make this better.</p>
+</div>
+
+<a href="#" class="deck-prev-link" title="Previous">&#8592;</a>
+<a href="#" class="deck-next-link" title="Next">&#8594;</a>
+
+<p class="deck-status">
+	<span class="deck-status-current"></span>
+	/
+	<span class="deck-status-total"></span>
+</p>
+
+<form action="." method="get" class="goto-form">
+	<label for="goto-slide">Go to slide:</label>
+	<input type="number" name="slidenum" id="goto-slide">
+	<input type="submit" value="Go">
+</form>
+
+<a href="." title="Permalink to this slide" class="deck-permalink">#</a>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.js"></script>
+<script>window.jQuery</script>
+
+<!-- Deck Core and extensions -->
+<script src="../core/deck.core.js"></script>
+<script src="../extensions/menu/deck.menu.js"></script>
+<script src="../extensions/goto/deck.goto.js"></script>
+<script src="../extensions/status/deck.status.js"></script>
+<script src="../extensions/navigation/deck.navigation.js"></script>
+<script src="../extensions/hash/deck.hash.js"></script>
+
+<script type="text/javascript">
+$(function() {
+	// Deck initialization
+	$.deck('.slide');
+	
+	$('#style-themes').change(function() {
+		$('#style-theme-link').attr('href', $(this).val());
+	});
+	
+	$('#transition-themes').change(function() {
+		$('#transition-theme-link').attr('href', $(this).val());
+	});
+
+    $('pre').click(function (){
+	$(this).toggleClass('highlighted');
+    });
+});
+</script>
+
+</body>
+</html>
