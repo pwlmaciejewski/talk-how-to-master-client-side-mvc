@@ -1,0 +1,41 @@
+.deck-container {
+	background: #fafafa;
+	color: #222;
+	font-family: 'The Girl Next Door';
+	font-size: 2.5em;
+}
+
+
+.deck-container pre, .deck-container code, .deck-container kbd, .deck-container samp {
+  font-family: 'The Girl Next Door';
+  font-weight: bold;
+  background: #eee;
+}
+
+.deck-container .slide h1 {
+	font-family: Lobster;
+	font-weight: normal;
+	font-size: 4em;
+	padding: 0 200px;
+}
+.deck-container .slide:nth-child(1) h1 {
+}
+
+.slide h2 {
+	border-bottom: 0;
+  font-size: 2em;
+  font-weight: bold;
+}
+.slide h3 {
+	font-size: 1em;
+}
+
+.slide.inverse {
+	background: #222;
+	color: #fafafa;
+}
+
+.slide li {
+	list-style-type: lower-alpha;
+	padding-left: 0.5em;
+}
